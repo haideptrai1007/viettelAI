@@ -131,7 +131,7 @@ def main():
             folder_path = os.path.join(output_folder, folder_name)
             os.makedirs(folder_path, exist_ok=True)
 
-            handle_pdf(pdfFiles, folder_path, model, tokenizer)
+            handle_pdf(os.path.join(input_folder, filename), folder_path, model, tokenizer)
 
 if __name__ == "__main__":
     main()
