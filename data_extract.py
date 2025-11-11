@@ -6,6 +6,7 @@ import torch
 from transformers import AutoModel
 import re
 import argparse
+from huggingface_hub import snapshot_download
 
 def index_img(filePath):
     with open(filePath, "r+", encoding="utf-8") as f:
@@ -52,7 +53,10 @@ def handle_pdf(filePath, outPath, model, tokenizer):
                 image_ext = base_image["ext"]
                 
                 image_filename = f"image{img_idx}.{image_ext}"
-                image_path = os.path.join(outPath, "images", image_filename)
+                image_dir = os.path.join(outPath, "images")
+                os.makedirs(image_dir, exist_ok=True)
+                image_path = os.path.join(image_dir, image_filename)
+                img_idx += 1
                 
                 with open(image_path, "wb") as f:
                     f.write(image_bytes)
@@ -101,7 +105,8 @@ def main():
     output_folder = args.output
 
     os.environ["UNSLOTH_WARN_UNINITIALIZED"] = '0'
-    from huggingface_hub import snapshot_download
+    os.environ["HF_HUB_DISABLE_REMOTE_CODE"] = "1"
+
     modelPath = snapshot_download("unsloth/DeepSeek-OCR", local_dir = "deepseek_ocr")
 
     model, tokenizer = FastVisionModel.from_pretrained(
