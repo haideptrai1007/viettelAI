@@ -21,7 +21,7 @@ def index_img(filePath):
             return replacement
 
         # Replace all image references
-        new_content = re.sub(r'!\[\]\(images/\d+\.jpg\)', replace_image, content)
+        new_content = re.sub(r'!\[.*?\]\(images/image\d+\.(?:jpg|png|jpeg)\)', replace_image, content)
 
         # Go to the beginning and overwrite
         f.seek(0)
